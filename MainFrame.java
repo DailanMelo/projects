@@ -49,7 +49,7 @@ public class MainFrame extends JFrame {
         botaoLogin.addActionListener(e -> autenticarUsuario());
     }
 
-    // Correção 1: Ajuste no login padrão
+    // Inicio do Login 
     private void autenticarUsuario() {
         String usuario = campoUsuario.getText();
         String senha = new String(campoSenha.getPassword());
@@ -128,14 +128,14 @@ public class MainFrame extends JFrame {
             setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
             setLocationRelativeTo(null);
 
-            // Criando componentes
+            // Criacao de componentes
             JLabel labelNome = new JLabel("Nome:");
             JTextField campoNome = new JTextField(20);
             JLabel labelSenha = new JLabel("Senha:");
             JPasswordField campoSenha = new JPasswordField(20);
             JButton botaoSalvar = new JButton("Salvar");
 
-            // Criando um painel para adicionar os componentes
+            // Criacao de um painel para adicionar os componentes
             JPanel painel = new JPanel(new GridLayout(3, 2));
             painel.add(labelNome);
             painel.add(campoNome);
@@ -151,7 +151,7 @@ public class MainFrame extends JFrame {
                 String nome = campoNome.getText();
                 String senha = new String(campoSenha.getPassword());
 
-                // Aqui você pode adicionar a lógica para salvar o usuário no banco de dados
+           
                 JOptionPane.showMessageDialog(null, "Usuário salvo: " + nome);
             });
 
@@ -168,14 +168,14 @@ public class MainFrame extends JFrame {
             setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
             setLocationRelativeTo(null);
 
-            // Criando componentes
+           // Criacao de componentes
             JLabel labelPlaca = new JLabel("Placa:");
             JTextField campoPlaca = new JTextField(10);
             JLabel labelModelo = new JLabel("Modelo:");
             JTextField campoModelo = new JTextField(20);
             JButton botaoSalvar = new JButton("Salvar");
 
-            // Criando um painel para adicionar os componentes
+            // Criacao de um painel para adicionar os componentes
             JPanel painel = new JPanel(new GridLayout(3, 2));
             painel.add(labelPlaca);
             painel.add(campoPlaca);
@@ -205,12 +205,12 @@ public class MainFrame extends JFrame {
             setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
             setLocationRelativeTo(null);
 
-            // Criando componentes
+         // Criacao de componentes
             JLabel labelNome = new JLabel("Nome:");
             JTextField campoNome = new JTextField(20);
             JButton botaoSalvar = new JButton("Salvar");
 
-            // Criando um painel para adicionar os componentes
+            // Criacao de um painel para adicionar os componentes
             JPanel painel = new JPanel(new GridLayout(2, 2));
             painel.add(labelNome);
             painel.add(campoNome);
@@ -240,7 +240,7 @@ public class MainFrame extends JFrame {
             setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
             setLocationRelativeTo(null);
 
-            // Criando componentes
+            // Criacao de componentes
             JLabel labelVeiculo = new JLabel("Veículo:");
             comboBoxVeiculo = new JComboBox<>();
 
@@ -248,7 +248,7 @@ public class MainFrame extends JFrame {
             JTextField campoDescricao = new JTextField(20);
             JButton botaoSalvar = new JButton("Salvar");
 
-            // Criando um painel para adicionar os componentes
+            // Criacao de um painel para adicionar os componentes
             JPanel painel = new JPanel(new GridLayout(3, 2));
             painel.add(labelVeiculo);
             painel.add(comboBoxVeiculo);
@@ -272,7 +272,6 @@ public class MainFrame extends JFrame {
                     return;
                 }
 
-                // Aqui você pode adicionar a lógica para salvar o serviço no banco de dados
                 JOptionPane.showMessageDialog(null, "Serviço salvo: " + descricao + " no veículo " + veiculo);
             });
 
@@ -298,7 +297,7 @@ public class MainFrame extends JFrame {
         }
     }
 
-    // Correção 2: Consulta de serviços por veículo
+    // Consulta de serviços por veículo
         public class TelaConsultaVeiculo extends JFrame {
         public TelaConsultaVeiculo() {
             setTitle("Consulta de Veículo");
@@ -306,12 +305,12 @@ public class MainFrame extends JFrame {
             setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
             setLocationRelativeTo(null);
 
-            // Criando componentes
+         // Criacao de componentes
             JLabel labelPlaca = new JLabel("Placa:");
             JTextField campoPlaca = new JTextField(10);
             JButton botaoConsultar = new JButton("Consultar");
 
-            // Criando um painel para adicionar os componentes
+            // Criacao de um painel para adicionar os componentes
             JPanel painel = new JPanel(new GridLayout(2, 2));
             painel.add(labelPlaca);
             painel.add(campoPlaca);
@@ -330,7 +329,7 @@ public class MainFrame extends JFrame {
             setVisible(true);
         }
 
-        // Correção 3: Exibir serviços realizados no veículo
+        // Exibicao de serviços realizados no veículo
         private void consultarServicosVeiculo(String placa) {
             try {
                 try (Connection conn = ConexaoBD.getConnection()) {
@@ -364,7 +363,7 @@ public class MainFrame extends JFrame {
             setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
             setLocationRelativeTo(null);
 
-            // Criando componentes
+           // Criacao de componentes
             JLabel labelTipo = new JLabel("Tipo de Dado:");
             String[] tiposDados = {"Usuário", "Veículo", "Fornecedor", "Serviço"};
             comboBoxTipo = new JComboBox<>(tiposDados);
@@ -373,7 +372,7 @@ public class MainFrame extends JFrame {
             comboBoxItem = new JComboBox<>();
             botaoExcluir = new JButton("Excluir");
 
-            // Criando um painel para adicionar os componentes
+            // Criacao de um painel para adicionar os componentes
             JPanel painel = new JPanel(new GridLayout(3, 2));
             painel.add(labelTipo);
             painel.add(comboBoxTipo);
@@ -397,7 +396,7 @@ public class MainFrame extends JFrame {
                     return;
                 }
 
-                // Aqui você pode adicionar a lógica para excluir o item do banco de dados
+              
                 JOptionPane.showMessageDialog(null, tipo + " excluído: " + item);
             });
 
@@ -405,7 +404,7 @@ public class MainFrame extends JFrame {
             setVisible(true);
         }
 
-        // Correção 4: Exibir itens para exclusão
+        // Exibicao de itens para exclusão
         private void carregarItens() {
             String tipoSelecionado = (String) comboBoxTipo.getSelectedItem();
             comboBoxItem.removeAllItems();
