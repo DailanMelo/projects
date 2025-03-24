@@ -1,0 +1,285 @@
+package com.example.app.ui.home
+
+import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.foundation.lazy.itemsIndexed
+import androidx.compose.material3.*
+import androidx.compose.runtime.*
+import androidx.lifecycle.ViewModel
+import androidx.lifecycle.viewmodel.compose.viewModel
+import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.StateFlow
+
+@Composable
+fun HomePageScreen(viewModel: HomePageViewModel = viewModel()) {
+    Scaffold(
+        topBar = {
+            TopAppBar(title = { Text("Home Page") })
+        }
+    ) { padding ->
+        Column(modifier = Modifier.padding(padding)) {
+            PaginatedDataTable(viewModel)
+        }
+    }
+}
+
+@Composable
+fun PaginatedDataTable(viewModel: HomePageViewModel) {
+    val items by viewModel.items.collectAsState()
+
+    LazyColumn {
+        itemsIndexed(items) { index, item ->
+            ListItem(headlineContent = { Text("Item $item") })
+        }
+    }
+}
+
+class HomePageViewModel : ViewModel() {
+    private val _items = MutableStateFlow((1..50).toList()) // Simulando dados
+    val items: StateFlow<List<Int>> = _items
+}
+
+package com.example.app.ui.adicionarregistro
+
+import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.text.KeyboardOptions
+import androidx.compose.material3.*
+import androidx.compose.runtime.*
+import androidx.compose.ui.Modifier
+import androidx.compose.ui.focus.FocusRequester
+import androidx.compose.ui.focus.focusRequester
+import androidx.compose.ui.text.input.KeyboardType
+import androidx.compose.ui.unit.dp
+import androidx.lifecycle.ViewModel
+import androidx.lifecycle.viewmodel.compose.viewModel
+
+@Composable
+fun AdicionarRegistroScreen(viewModel: AdicionarRegistroViewModel = viewModel()) {
+    val state = viewModel.uiState.collectAsState()
+
+    Column(modifier = Modifier.padding(16.dp)) {
+        OutlinedTextField(
+            value = state.value.descricao,
+            onValueChange = { viewModel.updateDescricao(it) },
+            label = { Text("Descrição") },
+            modifier = Modifier.fillMaxWidth(),
+        )
+
+        OutlinedTextField(
+            value = state.value.valor,
+            onValueChange = { viewModel.updateValor(it) },
+            label = { Text("Valor") },
+            keyboardOptions = KeyboardOptions.Default.copy(keyboardType = KeyboardType.Number),
+            modifier = Modifier.fillMaxWidth(),
+        )
+
+        DropdownMenu(
+            expanded = state.value.isCategoriaExpanded,
+            onDismissRequest = { viewModel.toggleCategoriaMenu(false) }
+        ) {
+            listOf("Categoria 1", "Categoria 2").forEach { categoria ->
+                DropdownMenuItem(
+                    text = { Text(categoria) },
+                    onClick = { viewModel.updateCategoria(categoria) }
+                )
+            }
+        }
+
+        Button(onClick = { viewModel.salvarRegistro() }) {
+            Text("Salvar")
+        }
+    }
+}
+
+class AdicionarRegistroViewModel : ViewModel() {
+    private val _uiState = mutableStateOf(AdicionarRegistroState())
+    val uiState: State<AdicionarRegistroState> = _uiState
+
+    fun updateDescricao(value: String) {
+        _uiState.value = _uiState.value.copy(descricao = value)
+    }
+
+    fun updateValor(value: String) {
+        _uiState.value = _uiState.value.copy(valor = value)
+    }
+
+    fun updateCategoria(value: String) {
+        _uiState.value = _uiState.value.copy(categoria = value, isCategoriaExpanded = false)
+    }
+
+    fun toggleCategoriaMenu(expanded: Boolean) {
+        _uiState.value = _uiState.value.copy(isCategoriaExpanded = expanded)
+    }
+
+    fun salvarRegistro() {
+        // Lógica para salvar os dados
+    }
+}
+
+data class AdicionarRegistroState(
+    val descricao: String = "",
+    val valor: String = "",
+    val categoria: String = "",
+    val isCategoriaExpanded: Boolean = false
+)
+package com.example.app.ui.editarregistro
+
+import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.text.KeyboardOptions
+import androidx.compose.material3.*
+import androidx.compose.runtime.*
+import androidx.compose.ui.Modifier
+import androidx.compose.ui.text.input.KeyboardType
+import androidx.compose.ui.unit.dp
+import androidx.lifecycle.ViewModel
+import androidx.lifecycle.viewmodel.compose.viewModel
+
+@Composable
+fun EditarRegistroScreen(
+    registroId: Int, // Identificador do registro a ser editado
+    viewModel: EditarRegistroViewModel = viewModel()
+) {
+    val state = viewModel.uiState.collectAsState()
+
+    // Carregar dados do registro
+    LaunchedEffect(registroId) {
+        viewModel.carregarRegistro(registroId)
+    }
+
+    Column(modifier = Modifier.padding(16.dp)) {
+        OutlinedTextField(
+            value = state.value.descricao,
+            onValueChange = { viewModel.updateDescricao(it) },
+            label = { Text("Descrição") },
+            modifier = Modifier.fillMaxWidth(),
+        )
+
+        OutlinedTextField(
+            value = state.value.valor,
+            onValueChange = { viewModel.updateValor(it) },
+            label = { Text("Valor") },
+            keyboardOptions = KeyboardOptions.Default.copy(keyboardType = KeyboardType.Number),
+            modifier = Modifier.fillMaxWidth(),
+        )
+
+        DropdownMenu(
+            expanded = state.value.isCategoriaExpanded,
+            onDismissRequest = { viewModel.toggleCategoriaMenu(false) }
+        ) {
+            listOf("Categoria 1", "Categoria 2").forEach { categoria ->
+                DropdownMenuItem(
+                    text = { Text(categoria) },
+                    onClick = { viewModel.updateCategoria(categoria) }
+                )
+            }
+        }
+
+        Button(onClick = { viewModel.salvarAlteracoes() }) {
+            Text("Salvar Alterações")
+        }
+    }
+}
+
+class EditarRegistroViewModel : ViewModel() {
+    private val _uiState = mutableStateOf(EditarRegistroState())
+    val uiState: State<EditarRegistroState> = _uiState
+
+    fun carregarRegistro(id: Int) {
+        // Simula carregamento dos dados
+        _uiState.value = EditarRegistroState(
+            descricao = "Registro $id",
+            valor = "100.00",
+            categoria = "Categoria 1"
+        )
+    }
+
+    fun updateDescricao(value: String) {
+        _uiState.value = _uiState.value.copy(descricao = value)
+    }
+
+    fun updateValor(value: String) {
+        _uiState.value = _uiState.value.copy(valor = value)
+    }
+
+    fun updateCategoria(value: String) {
+        _uiState.value = _uiState.value.copy(categoria = value, isCategoriaExpanded = false)
+    }
+
+    fun toggleCategoriaMenu(expanded: Boolean) {
+        _uiState.value = _uiState.value.copy(isCategoriaExpanded = expanded)
+    }
+
+    fun salvarAlteracoes() {
+        // Lógica para salvar alterações
+    }
+}
+
+data class EditarRegistroState(
+    val descricao: String = "",
+    val valor: String = "",
+    val categoria: String = "",
+    val isCategoriaExpanded: Boolean = false
+)
+package com.example.app.ui.meuperfil
+
+import androidx.compose.foundation.layout.*
+import androidx.compose.material3.*
+import androidx.compose.runtime.*
+import androidx.compose.ui.Modifier
+import androidx.compose.ui.unit.dp
+import androidx.lifecycle.ViewModel
+import androidx.lifecycle.viewmodel.compose.viewModel
+
+@Composable
+fun MeuPerfilScreen(viewModel: MeuPerfilViewModel = viewModel()) {
+    val state = viewModel.uiState.collectAsState()
+
+    Column(modifier = Modifier.padding(16.dp)) {
+        Text(text = "Meu Perfil", style = MaterialTheme.typography.headlineMedium)
+
+        OutlinedTextField(
+            value = state.value.nome,
+            onValueChange = { viewModel.updateNome(it) },
+            label = { Text("Nome") },
+            modifier = Modifier.fillMaxWidth(),
+        )
+
+        OutlinedTextField(
+            value = state.value.email,
+            onValueChange = { viewModel.updateEmail(it) },
+            label = { Text("E-mail") },
+            modifier = Modifier.fillMaxWidth(),
+        )
+
+        Button(
+            onClick = { viewModel.salvarPerfil() },
+            modifier = Modifier.padding(top = 16.dp)
+        ) {
+            Text("Salvar Alterações")
+        }
+    }
+}
+
+class MeuPerfilViewModel : ViewModel() {
+    private val _uiState = mutableStateOf(MeuPerfilState())
+    val uiState: State<MeuPerfilState> = _uiState
+
+    fun updateNome(value: String) {
+        _uiState.value = _uiState.value.copy(nome = value)
+    }
+
+    fun updateEmail(value: String) {
+        _uiState.value = _uiState.value.copy(email = value)
+    }
+
+    fun salvarPerfil() {
+        // Lógica para salvar perfil
+    }
+}
+
+data class MeuPerfilState(
+    val nome: String = "Usuário",
+    val email: String = "usuario@email.com"
+)
+
+
